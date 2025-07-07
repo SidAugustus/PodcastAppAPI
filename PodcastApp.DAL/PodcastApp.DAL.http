@@ -1,0 +1,6 @@
+@PodcastApp.DAL_HostAddress = http://localhost:5070
+
+GET {{PodcastApp.DAL_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
