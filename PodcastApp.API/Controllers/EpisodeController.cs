@@ -15,7 +15,6 @@ namespace PodcastApp.API.Controllers
             _episodeService = episodeService;
         }
 
-        // POST: api/episode/add
         [HttpPost("add")]
         public IActionResult AddEpisode([FromBody] EpisodeDTO dto)
         {
@@ -30,7 +29,6 @@ namespace PodcastApp.API.Controllers
             }
         }
 
-        // PUT: api/episode/update/{id}
         [HttpPut("update/{id}")]
         public IActionResult UpdateEpisode(int id, [FromBody] EpisodeDTO dto)
         {
@@ -45,7 +43,6 @@ namespace PodcastApp.API.Controllers
             }
         }
 
-        // DELETE: api/episode/delete/{id}
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteEpisode(int id)
         {
@@ -59,8 +56,7 @@ namespace PodcastApp.API.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
-
-        // GET: api/episode/byPodcast/{podcastId}
+        
         [HttpGet("byPodcast/{podcastId}")]
         public IActionResult GetEpisodesByPodcast(int podcastId)
         {

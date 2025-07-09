@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
-using PodcastApp.Models;
+
 
 namespace PodcastApp.API.Controllers
 {
