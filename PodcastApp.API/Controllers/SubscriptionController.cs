@@ -14,8 +14,6 @@ namespace PodcastApp.API.Controllers
         {
             _subscriptionService = subscriptionService;
         }
-
-        // 🔍 Get all subscriptions of a user
         [HttpGet("user/{userId}")]
         public IActionResult GetUserSubscriptions(int userId)
         {
