@@ -16,11 +16,11 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult AddEpisode([FromBody] EpisodeDTO dto)
+        public async Task<IActionResult> AddEpisodeAsync([FromBody] EpisodeDTO dto)
         {
             try
             {
-                _episodeService.AddEpisode(dto);
+                await _episodeService.AddEpisodeAsync(dto);
                 return Ok(new { message = " Episode added successfully." });
             }
             catch (Exception ex)
@@ -30,11 +30,11 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public IActionResult UpdateEpisode(int id, [FromBody] EpisodeDTO dto)
+        public async Task<IActionResult> UpdateEpisodeAsync(int id, [FromBody] EpisodeDTO dto)
         {
             try
             {
-                _episodeService.UpdateEpisode(id, dto);
+                await _episodeService.UpdateEpisodeAsync(id, dto);
                 return Ok(new { message = " Episode updated successfully." });
             }
             catch (Exception ex)
@@ -44,11 +44,11 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteEpisode(int id)
+        public async Task<IActionResult> DeleteEpisodeAsync(int id)
         {
             try
             {
-                _episodeService.DeleteEpisode(id);
+                await _episodeService.DeleteEpisodeAsync(id);
                 return Ok(new { message = " Episode deleted successfully." });
             }
             catch (Exception ex)
@@ -58,11 +58,11 @@ namespace PodcastApp.API.Controllers
         }
         
         [HttpGet("byPodcast/{podcastId}")]
-        public IActionResult GetEpisodesByPodcast(int podcastId)
+        public async Task<IActionResult> GetEpisodesByPodcastAsync(int podcastId)
         {
             try
             {
-                var episodes = _episodeService.GetEpisodesByPodcast(podcastId);
+                var episodes = await _episodeService.GetEpisodesByPodcastAsync(podcastId);
                 return Ok(episodes);
             }
             catch (Exception ex)

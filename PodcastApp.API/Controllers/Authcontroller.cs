@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
 
@@ -17,14 +18,14 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             try
             {
-                if (_authService.EmailExists(request.Email))
+                if (await _authService.EmailExistsAsync(request.Email))
                     return BadRequest(new { message = "User already exists." });
 
-                _authService.RegisterUser(request);
+                await _authService.RegisterUserAsync(request);
                 return Ok(new { message = "User registered successfully." });
             }
             catch (Exception ex)
@@ -34,9 +35,9 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest login)
+        public async Task<IActionResult> Login([FromBody] LoginRequest login)
         {
-            var user = _authService.GetUserIfValid(login);
+            var user = await _authService.GetUserIfValidAsync(login);
 
             if (user == null)
                 return Unauthorized(new { message = "Invalid credentials." });

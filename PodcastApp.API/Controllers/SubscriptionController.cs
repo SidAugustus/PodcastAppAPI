@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
 
@@ -15,9 +16,9 @@ namespace PodcastApp.API.Controllers
             _subscriptionService = subscriptionService;
         }
         [HttpGet("user/{userId}")]
-        public IActionResult GetUserSubscriptions(int userId)
+        public async Task<IActionResult> GetUserSubscriptionsAsync(int userId)
         {
-            var subscriptions = _subscriptionService.GetSubscriptionsByUser(userId);
+            var subscriptions = await _subscriptionService.GetSubscriptionsByUserAsync(userId);
 
             if (subscriptions == null || !subscriptions.Any())
                 return NotFound(new { message = "No subscriptions found for the user." });
@@ -26,24 +27,24 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpPost("subscribe")]
-        public IActionResult Subscribe([FromBody] SubscriptionDTO dto)
+        public async Task<IActionResult> SubscribeAsync([FromBody] SubscriptionDTO dto)
         {
             if (dto == null || dto.UserId <= 0 || dto.PodcastId <= 0)
                 return BadRequest(new { message = "Invalid subscription data." });
 
-            _subscriptionService.Subscribe(dto);
+            await _subscriptionService.SubscribeAsync(dto);
 
             return Ok(new { message = "✅ Subscribed successfully." });
         }
 
 
         [HttpPost("unsubscribe")]
-        public IActionResult Unsubscribe([FromBody] SubscriptionDTO dto)
+        public async Task<IActionResult> UnsubscribeAsync([FromBody] SubscriptionDTO dto)
         {
             if (dto == null || dto.UserId <= 0 || dto.PodcastId <= 0)
                 return BadRequest(new { message = "Invalid subscription data." });
 
-            _subscriptionService.Unsubscribe(dto);
+            await _subscriptionService.UnsubscribeAsync(dto);
 
             return Ok(new { message = "✅ Unsubscribed successfully." });
         }

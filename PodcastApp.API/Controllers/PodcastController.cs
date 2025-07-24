@@ -14,119 +14,119 @@ public class PodcastController : ControllerBase
     }
 
     [HttpPost("upload")]
-    public IActionResult UploadPodcast([FromBody] PodcastUploadDTO dto)
+    public async Task<IActionResult> UploadPodcastAsync([FromBody] PodcastUploadDTO dto)
     {
-        var result = _podcastService.UploadPodcast(dto);
+        var result = await _podcastService.UploadPodcastAsync(dto);
         return Ok(result);
     }
 
     [HttpGet("pending")]
-    public IActionResult GetPendingPodcasts()
+    public async Task<IActionResult> GetPendingPodcastsAsync()
     {
-        var result = _podcastService.GetPendingPodcasts();
+        var result = await _podcastService.GetPendingPodcastsAsync();
         return Ok(result);
     }
 
     [HttpPut("approve/{id}")]
-    public IActionResult ApprovePodcast(int id)
+    public async Task<IActionResult> ApprovePodcastAsync(int id)
     {
-        var success = _podcastService.ApprovePodcast(id);
+        var success = await _podcastService.ApprovePodcastAsync(id);
         if (!success) return NotFound(new { message = "Podcast not found." });
 
         return Ok(new { message = "Podcast approved." });
     }
 
     [HttpDelete("delete/{id}")]
-    public IActionResult DeletePodcast(int id)
+    public async Task<IActionResult> DeletePodcastAsync(int id)
     {
-        var success = _podcastService.DeletePodcast(id);
+        var success = await _podcastService.DeletePodcastAsync(id);
         if (!success) return NotFound(new { message = "Podcast not found." });
 
         return Ok(new { message = "Podcast deleted." });
     }
 
     [HttpGet("approved")]
-    public IActionResult GetApprovedPodcasts()
+    public async Task<IActionResult> GetApprovedPodcastsAsync()
     {
-        var result = _podcastService.GetApprovedPodcasts();
+        var result = await _podcastService.GetApprovedPodcastsAsync();
         return Ok(result);
     }
 
     [HttpGet("flagged")]
-    public IActionResult GetFlaggedPodcasts()
+    public async Task<IActionResult> GetFlaggedPodcastsAsync()
     {
-        var result = _podcastService.GetFlaggedPodcasts();
+        var result = await _podcastService.GetFlaggedPodcastsAsync();
         return Ok(result);
     }
 
     [HttpPut("flag/{id}")]
-    public IActionResult FlagPodcast(int id)
+    public async Task<IActionResult> FlagPodcastAsync(int id)
     {
-        var success = _podcastService.FlagPodcastAndUser(id);
+        var success = await _podcastService.FlagPodcastAndUserAsync(id);
         if (!success) return NotFound(new { message = "Podcast not found." });
 
         return Ok(new { message = "Podcast and user flagged." });
     }
 
     [HttpPut("unflag/{id}")]
-    public IActionResult UnflagPodcastAndUser(int id)
+    public async Task<IActionResult> UnflagPodcastAndUserAsync(int id)
     {
-        var success = _podcastService.UnflagPodcastAndUser(id);
+        var success = await _podcastService.UnflagPodcastAndUserAsync(id);
         if (!success) return NotFound(new { message = "Podcast not found." });
 
         return Ok(new { message = "Podcast and user unflagged." });
     }
 
     [HttpGet("user/flagged")]
-    public IActionResult GetFlaggedUsers()
+    public async Task<IActionResult> GetFlaggedUsersAsync()
     {
-        var result = _podcastService.GetFlaggedUsers();
+        var result = await _podcastService.GetFlaggedUsersAsync();
         return Ok(result);
     }
 
     [HttpPut("user/suspend/{id}")]
-    public IActionResult SuspendUser(int id)
+    public async Task<IActionResult> SuspendUserAsync(int id)
     {
-        var success = _podcastService.SuspendUser(id);
+        var success = await _podcastService.SuspendUserAsync(id);
         if (!success) return NotFound(new { message = "User not found." });
 
         return Ok(new { message = "User suspended." });
     }
 
     [HttpPut("user/unsuspend/{id}")]
-    public IActionResult UnsuspendUser(int id)
+    public async Task<IActionResult> UnsuspendUserAsync(int id)
     {
-        var success = _podcastService.UnsuspendUser(id);
+        var success = await _podcastService.UnsuspendUserAsync(id);
         if (!success) return NotFound(new { message = "User not found." });
 
         return Ok(new { message = "User unsuspended." });
     }
 
     [HttpGet("user/suspended")]
-    public IActionResult GetSuspendedUsers()
+    public async Task<IActionResult> GetSuspendedUsersAsync()
     {
-        var result = _podcastService.GetSuspendedUsers();
+        var result = await _podcastService.GetSuspendedUsersAsync();
         return Ok(result);
     }
 
     [HttpGet("user/{userId}")]
-    public IActionResult GetPodcastsByUser(int userId)
+    public async Task<IActionResult> GetPodcastsByUserAsync(int userId)
     {
-        var result = _podcastService.GetPodcastsByUser(userId);
+        var result = await _podcastService.GetPodcastsByUserAsync(userId);
         return Ok(result);
     }
 
     [HttpGet("all")]
-    public IActionResult GetAllPodcasts()
+    public async Task<IActionResult> GetAllPodcastsAsync()
     {
-        var result = _podcastService.GetAllApprovedPodcasts();
+        var result = await _podcastService.GetAllApprovedPodcastsAsync();
         return Ok(result);
     }
 
     [HttpGet("approved/paginated")]
-    public IActionResult GetPaginatedApprovedPodcasts(int page = 1, int pageSize = 5)
+    public async Task<IActionResult> GetPaginatedApprovedPodcastsAsync(int page = 1, int pageSize = 5)
     {
-        var query = _podcastService.GetApprovedPodcasts(); // Full list
+        var query = await _podcastService.GetApprovedPodcastsAsync(); // Full list
 
         var total = query.Count;
         var paginated = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();

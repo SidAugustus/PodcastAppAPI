@@ -27,7 +27,12 @@ builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-    sqlOptions => sqlOptions.CommandTimeout(60)));
+        sqlOptions =>
+        {
+            sqlOptions.CommandTimeout(60);
+            sqlOptions.MigrationsAssembly("PodcastApp.Repository");
+        }));
+
 
 builder.Services.AddCors(options =>
 {
