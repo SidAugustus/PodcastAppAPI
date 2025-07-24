@@ -5,8 +5,8 @@ namespace PodcastApp.Interface
 {
     public interface ISubscriptionService
     {
-        void Subscribe(SubscriptionDTO dto);
-        void Unsubscribe(SubscriptionDTO dto);
-        List<Subscription> GetSubscriptionsByUser(int userId);
+        Task SubscribeAsync(SubscriptionDTO dto);
+        Task UnsubscribeAsync(SubscriptionDTO dto);
+        Task<List<Subscription>> GetSubscriptionsByUserAsync(int userId);
     }
 }

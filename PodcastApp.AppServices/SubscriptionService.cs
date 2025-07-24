@@ -13,19 +13,19 @@ namespace PodcastApp.AppServices
             _repository = repository;
         }
 
-        public void Subscribe(SubscriptionDTO dto)
+        public async Task SubscribeAsync(SubscriptionDTO dto)
         {
-            _repository.Subscribe(dto.UserId, dto.PodcastId);
+            await _repository.SubscribeAsync(dto.UserId, dto.PodcastId);
         }
 
-        public void Unsubscribe(SubscriptionDTO dto)
+        public async Task UnsubscribeAsync(SubscriptionDTO dto)
         {
-            _repository.Unsubscribe(dto.UserId, dto.PodcastId);
+            await _repository.UnsubscribeAsync(dto.UserId, dto.PodcastId);
         }
 
-        public List<Subscription> GetSubscriptionsByUser(int userId)
+        public async Task<List<Subscription>> GetSubscriptionsByUserAsync(int userId)
         {
-            return _repository.GetSubscriptionsByUser(userId);
+            return await _repository.GetSubscriptionsByUserAsync(userId);
         }
     }
 }

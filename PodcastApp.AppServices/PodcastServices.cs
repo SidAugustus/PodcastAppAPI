@@ -15,7 +15,7 @@ namespace PodcastApp.AppServices
             _userRepository = userRepository;
         }
 
-        public bool UploadPodcast(PodcastUploadDTO dto)
+        public async Task<bool> UploadPodcastAsync(PodcastUploadDTO dto)
         {
             var podcast = new Podcast
             {
@@ -27,121 +27,121 @@ namespace PodcastApp.AppServices
                 IsApproved = false
             };
 
-            _podcastRepository.AddPodcast(podcast);
-            return true; // ✅ Ensure method returns a boolean
+            await _podcastRepository.AddPodcastAsync(podcast);
+            return true;
         }
 
-        public List<Podcast> GetPendingPodcasts()
+        public async Task<List<Podcast>> GetPendingPodcastsAsync()
         {
-            return _podcastRepository.GetPodcastsByApprovalStatus(false);
+            return await _podcastRepository.GetPodcastsByApprovalStatusAsync(false);
         }
 
-        public bool ApprovePodcast(int id)
+        public async Task<bool> ApprovePodcastAsync(int id)
         {
-            var podcast = _podcastRepository.GetPodcastById(id);
+            var podcast = await _podcastRepository.GetPodcastByIdAsync(id);
             if (podcast == null) return false;
 
             podcast.IsApproved = true;
-            _podcastRepository.UpdatePodcast(podcast);
+            await _podcastRepository.UpdatePodcastAsync(podcast);
             return true;
         }
 
-        public bool DeletePodcast(int id)
+        public async Task<bool> DeletePodcastAsync(int id)
         {
-            var podcast = _podcastRepository.GetPodcastById(id);
+            var podcast = await _podcastRepository.GetPodcastByIdAsync(id);
             if (podcast == null) return false;
 
-            _podcastRepository.DeletePodcast(podcast);
+            await _podcastRepository.DeletePodcastAsync(podcast);
             return true;
         }
 
-        public bool FlagPodcastAndUser(int podcastId)
+        public async Task<bool> FlagPodcastAndUserAsync(int podcastId)
         {
-            var podcast = _podcastRepository.GetPodcastById(podcastId);
+            var podcast = await _podcastRepository.GetPodcastByIdAsync(podcastId);
             if (podcast == null) return false;
 
             podcast.IsFlagged = true;
-            _podcastRepository.UpdatePodcast(podcast);
+            await _podcastRepository.UpdatePodcastAsync(podcast);
 
-            var user = _userRepository.GetUserById(podcast.CreatedByUserId);
+            var user = await _userRepository.GetUserByIdAsync(podcast.CreatedByUserId);
             if (user != null)
             {
                 user.IsFlagged = true;
-                _userRepository.UpdateUser(user);
+                await _userRepository.UpdateUserAsync(user);
             }
 
             return true;
         }
 
-        public bool UnflagPodcastAndUser(int podcastId)
+        public async Task<bool> UnflagPodcastAndUserAsync(int podcastId)
         {
-            var podcast = _podcastRepository.GetPodcastById(podcastId);
+            var podcast = await _podcastRepository.GetPodcastByIdAsync(podcastId);
             if (podcast == null) return false;
 
             podcast.IsFlagged = false;
-            _podcastRepository.UpdatePodcast(podcast);
+            await _podcastRepository.UpdatePodcastAsync(podcast);
 
-            var user = _userRepository.GetUserById(podcast.CreatedByUserId);
+            var user = await _userRepository.GetUserByIdAsync(podcast.CreatedByUserId);
             if (user != null)
             {
-                bool hasOtherFlagged = _podcastRepository.HasOtherFlaggedPodcasts(user.UserId);
+                bool hasOtherFlagged = await _podcastRepository.HasOtherFlaggedPodcastsAsync(user.UserId);
                 if (!hasOtherFlagged)
                 {
                     user.IsFlagged = false;
-                    _userRepository.UpdateUser(user);
+                    await _userRepository.UpdateUserAsync(user);
                 }
             }
 
             return true;
         }
 
-        public List<Podcast> GetFlaggedPodcasts()
+        public async Task<List<Podcast>> GetFlaggedPodcastsAsync()
         {
-            return _podcastRepository.GetFlaggedPodcasts();
+            return await _podcastRepository.GetFlaggedPodcastsAsync();
         }
 
-        public List<Podcast> GetApprovedPodcasts()
+        public async Task<List<Podcast>> GetApprovedPodcastsAsync()
         {
-            return _podcastRepository.GetPodcastsByApprovalStatus(true);
+            return await _podcastRepository.GetPodcastsByApprovalStatusAsync(true);
         }
 
-        public List<object> GetAllApprovedPodcasts()
+        public async Task<List<object>> GetAllApprovedPodcastsAsync()
         {
-            return _podcastRepository.GetMinimalApprovedPodcasts();
+            return await _podcastRepository.GetMinimalApprovedPodcastsAsync();
         }
 
-        public List<Podcast> GetPodcastsByUser(int userId)
+        public async Task<List<Podcast>> GetPodcastsByUserAsync(int userId)
         {
-            return _podcastRepository.GetPodcastsByUser(userId);
+            return await _podcastRepository.GetPodcastsByUserAsync(userId);
         }
 
-        public List<User> GetFlaggedUsers()
+        public async Task<List<User>> GetFlaggedUsersAsync()
         {
-            return _userRepository.GetFlaggedUsers();
+            return await _userRepository.GetFlaggedUsersAsync();
         }
 
-        public List<User> GetSuspendedUsers()
+        public async Task<List<User>> GetSuspendedUsersAsync()
         {
-            return _userRepository.GetSuspendedUsers();
+            return await _userRepository.GetSuspendedUsersAsync();
         }
 
-        public bool SuspendUser(int userId)
+        public async Task<bool> SuspendUserAsync(int userId)
         {
-            var user = _userRepository.GetUserById(userId);
+            var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null) return false;
 
             user.IsSuspended = true;
-            _userRepository.UpdateUser(user);
+            await _userRepository.UpdateUserAsync(user);
             return true;
         }
 
-        public bool UnsuspendUser(int userId)
+        public async Task<bool> UnsuspendUserAsync(int userId)
         {
-            var user = _userRepository.GetUserById(userId);
+            var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null) return false;
 
             user.IsSuspended = false;
-            _userRepository.UpdateUser(user);
+            await _userRepository.UpdateUserAsync(user);
             return true;
         }
     }

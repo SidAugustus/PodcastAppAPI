@@ -4,12 +4,12 @@ namespace PodcastApp.Interface
 {
     public interface IUserRepository
     {
-        void AddUser(User user);
-        User? GetUserByEmail(string email);
-        User? GetUserById(int userId);
-        List<User> GetAllUsers();
-        List<User> GetFlaggedUsers();
-        List<User> GetSuspendedUsers();
-        void UpdateUser(User user);
+        Task AddUserAsync(User user);
+        Task<User?> GetUserByEmailAsync(string email);
+        Task<User?> GetUserByIdAsync(int userId);
+        Task<List<User>> GetAllUsersAsync();
+        Task<List<User>> GetFlaggedUsersAsync();
+        Task<List<User>> GetSuspendedUsersAsync();
+        Task UpdateUserAsync(User user);
     }
 }

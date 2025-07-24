@@ -1,4 +1,5 @@
-﻿using PodcastApp.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using PodcastApp.Interface;
 using PodcastApp.Models;
 
 namespace PodcastApp.Repository
@@ -12,59 +13,59 @@ namespace PodcastApp.Repository
             _context = context;
         }
 
-        public void AddPodcast(Podcast podcast)
+        public async Task AddPodcastAsync(Podcast podcast)
         {
-            _context.Podcasts.Add(podcast);
-            _context.SaveChanges();
+            await _context.Podcasts.AddAsync(podcast);
+            await _context.SaveChangesAsync();
         }
 
-        public Podcast? GetPodcastById(int podcastId)
+        public async Task<Podcast?> GetPodcastByIdAsync(int podcastId)
         {
-            return _context.Podcasts.FirstOrDefault(p => p.PodcastId == podcastId);
+            return await _context.Podcasts.FirstOrDefaultAsync(p => p.PodcastId == podcastId);
         }
 
-        public void UpdatePodcast(Podcast podcast)
+        public async Task UpdatePodcastAsync(Podcast podcast)
         {
             _context.Podcasts.Update(podcast);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeletePodcast(Podcast podcast)
+        public async Task DeletePodcastAsync(Podcast podcast)
         {
             _context.Podcasts.Remove(podcast);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public List<Podcast> GetPodcastsByApprovalStatus(bool isApproved)
+        public async Task<List<Podcast>> GetPodcastsByApprovalStatusAsync(bool isApproved)
         {
-            return _context.Podcasts
+            return await _context.Podcasts
                 .Where(p => p.IsApproved == isApproved)
-                .ToList();
+                .ToListAsync();
         }
 
-        public List<Podcast> GetFlaggedPodcasts()
+        public async Task<List<Podcast>> GetFlaggedPodcastsAsync()
         {
-            return _context.Podcasts
+            return await _context.Podcasts
                 .Where(p => p.IsFlagged)
-                .ToList();
+                .ToListAsync();
         }
 
-        public List<Podcast> GetPodcastsByUser(int userId)
+        public async Task<List<Podcast>> GetPodcastsByUserAsync(int userId)
         {
-            return _context.Podcasts
+            return await _context.Podcasts
                 .Where(p => p.CreatedByUserId == userId)
-                .ToList();
+                .ToListAsync();
         }
 
-        public bool HasOtherFlaggedPodcasts(int userId)
+        public async Task<bool> HasOtherFlaggedPodcastsAsync(int userId)
         {
-            return _context.Podcasts
-                .Any(p => p.CreatedByUserId == userId && p.IsFlagged);
+            return await _context.Podcasts
+                .AnyAsync(p => p.CreatedByUserId == userId && p.IsFlagged);
         }
 
-        public List<object> GetMinimalApprovedPodcasts()
+        public async Task<List<object>> GetMinimalApprovedPodcastsAsync()
         {
-            return _context.Podcasts
+            return await _context.Podcasts
                 .Where(p => p.IsApproved)
                 .Select(p => new
                 {
@@ -74,7 +75,7 @@ namespace PodcastApp.Repository
                     p.Category
                 })
                 .Cast<object>()
-                .ToList();
+                .ToListAsync();
         }
     }
 }

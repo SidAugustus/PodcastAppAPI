@@ -1,4 +1,5 @@
-﻿using PodcastApp.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using PodcastApp.Interface;
 using PodcastApp.Models;
 
 namespace PodcastApp.Repository
@@ -12,39 +13,40 @@ namespace PodcastApp.Repository
             _context = context;
         }
 
-        public void AddUser(User user)
+        public async Task AddUserAsync(User user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
         }
 
-        public User? GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public User? GetUserById(int userId)
+        public async Task<User?> GetUserByIdAsync(int userId)
         {
-            return _context.Users.FirstOrDefault(u => u.UserId == userId);
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsersAsync()
         {
-            return _context.Users.ToList();
+            return await _context.Users.ToListAsync();
         }
-        public List<User> GetFlaggedUsers()
+        public async Task<List<User>> GetFlaggedUsersAsync()
         {
-            return _context.Users.Where(u => u.IsFlagged).ToList();
+            return await _context.Users.Where(u => u.IsFlagged).ToListAsync();
         }
 
-        public List<User> GetSuspendedUsers()
+        public async Task<List<User>> GetSuspendedUsersAsync()
         {
-            return _context.Users.Where(u => u.IsSuspended).ToList();
+            return await _context.Users.Where(u => u.IsSuspended).ToListAsync();
+
         }
-        public void UpdateUser(User user)
+        public async Task UpdateUserAsync(User user)
         {
             _context.Users.Update(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

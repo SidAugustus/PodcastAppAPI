@@ -13,35 +13,35 @@ namespace PodcastApp.Repository
             _context = context;
         }
 
-        public void AddEpisode(Episode episode)
+        public async Task AddEpisodeAsync(Episode episode)
         {
-            _context.Episodes.Add(episode);
-            _context.SaveChanges();
+            await _context.Episodes.AddAsync(episode);
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateEpisode(Episode episode)
+        public async Task UpdateEpisodeAsync(Episode episode)
         {
             _context.Episodes.Update(episode);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteEpisode(Episode episode)
+        public async Task DeleteEpisodeAsync(Episode episode)
         {
             _context.Episodes.Remove(episode);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public Episode? GetEpisodeById(int episodeId)
+        public async Task<Episode?> GetEpisodeByIdAsync(int episodeId)
         {
-            return _context.Episodes.FirstOrDefault(e => e.EpisodeId == episodeId);
+            return await _context.Episodes.FirstOrDefaultAsync(e => e.EpisodeId == episodeId);
         }
 
-        public List<Episode> GetEpisodesByPodcast(int podcastId)
+        public async Task<List<Episode>> GetEpisodesByPodcastAsync(int podcastId)
         {
-            return _context.Episodes
+            return await _context.Episodes
                 .Where(e => e.PodcastId == podcastId)
                 .OrderByDescending(e => e.ReleaseDate)
-                .ToList();
+                .ToListAsync();
         }
     }
 }

@@ -15,9 +15,9 @@ namespace PodcastApp.AppServices
             _podcastRepository = podcastRepository;
         }
 
-        public bool AddEpisode(EpisodeDTO dto)
+        public async Task<bool> AddEpisodeAsync(EpisodeDTO dto)
         {
-            var podcast = _podcastRepository.GetPodcastById(dto.PodcastId);
+            var podcast = await _podcastRepository.GetPodcastByIdAsync(dto.PodcastId);
             if (podcast == null) return false;
 
             var episode = new Episode
@@ -30,13 +30,13 @@ namespace PodcastApp.AppServices
                 ReleaseDate = dto.ReleaseDate
             };
 
-            _episodeRepository.AddEpisode(episode);
+            await _episodeRepository.AddEpisodeAsync(episode);
             return true;
         }
 
-        public bool UpdateEpisode(int episodeId, EpisodeDTO dto)
+        public async Task<bool> UpdateEpisodeAsync(int episodeId, EpisodeDTO dto)
         {
-            var episode = _episodeRepository.GetEpisodeById(episodeId);
+            var episode = await _episodeRepository.GetEpisodeByIdAsync(episodeId);
             if (episode == null) return false;
 
             episode.Title = dto.Title;
@@ -44,22 +44,22 @@ namespace PodcastApp.AppServices
             episode.AudioUrl = dto.AudioUrl;
             episode.Duration = dto.Duration;
 
-            _episodeRepository.UpdateEpisode(episode);
+            await _episodeRepository.UpdateEpisodeAsync(episode);
             return true;
         }
 
-        public bool DeleteEpisode(int episodeId)
+        public async Task<bool> DeleteEpisodeAsync(int episodeId)
         {
-            var episode = _episodeRepository.GetEpisodeById(episodeId);
+            var episode = await _episodeRepository.GetEpisodeByIdAsync(episodeId);
             if (episode == null) return false;
 
-            _episodeRepository.DeleteEpisode(episode);
+            await _episodeRepository.DeleteEpisodeAsync(episode);
             return true;
         }
 
-        public List<Episode> GetEpisodesByPodcast(int podcastId)
+        public async Task<List<Episode>> GetEpisodesByPodcastAsync(int podcastId)
         {
-            return _episodeRepository.GetEpisodesByPodcast(podcastId);
+            return await _episodeRepository.GetEpisodesByPodcastAsync(podcastId);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using PodcastApp.Interface;
 using PodcastApp.Models;
 using PodcastApp.DTO;
+//using PodcastApp.API.Mapper;
 
 namespace PodcastApp.AppServices
 {
@@ -15,12 +17,12 @@ namespace PodcastApp.AppServices
             _userRepository = userRepository;
         }
 
-        public bool EmailExists(string email)
+        public async Task<bool> EmailExistsAsync(string email)
         {
-            return _userRepository.GetUserByEmail(email) != null;
+            return await _userRepository.GetUserByEmailAsync(email) != null;
         }
 
-        public void RegisterUser(RegisterRequest request)
+        public async Task RegisterUserAsync(RegisterRequest request)
         {
             var hashedPassword = HashPassword(request.Password);
 
@@ -36,20 +38,20 @@ namespace PodcastApp.AppServices
                 IsSuspended = false
             };
 
-            _userRepository.AddUser(user);
+            await _userRepository.AddUserAsync(user);
         }
 
-        public bool ValidateLogin(LoginRequest request)
+        public async Task<bool> ValidateLoginAsync(LoginRequest request)
         {
-            var user = _userRepository.GetUserByEmail(request.Email);
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
             if (user == null) return false;
 
             return VerifyPassword(request.Password, user.PasswordHash);
         }
 
-        public User? GetUserIfValid(LoginRequest request)
+        public async Task<User?> GetUserIfValidAsync(LoginRequest request)
         {
-            var user = _userRepository.GetUserByEmail(request.Email);
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
             if (user == null) return null;
 
             return VerifyPassword(request.Password, user.PasswordHash) ? user : null;

@@ -5,10 +5,10 @@ namespace PodcastApp.Interface
 {
     public interface IEpisodeService
     {
-        bool AddEpisode(EpisodeDTO dto);
-        bool UpdateEpisode(int episodeId, EpisodeDTO dto);
-        bool DeleteEpisode(int episodeId);
-        List<Episode> GetEpisodesByPodcast(int podcastId);
+        Task<bool> AddEpisodeAsync(EpisodeDTO dto);
+        Task<bool> UpdateEpisodeAsync(int episodeId, EpisodeDTO dto);
+        Task<bool> DeleteEpisodeAsync(int episodeId);
+        Task<List<Episode>> GetEpisodesByPodcastAsync(int podcastId);
     }
 }
 

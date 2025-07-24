@@ -4,16 +4,16 @@ namespace PodcastApp.Interface
 {
     public interface IPodcastRepository
     {
-        void AddPodcast(Podcast podcast);
-        Podcast? GetPodcastById(int podcastId);
-        void UpdatePodcast(Podcast podcast);
-        void DeletePodcast(Podcast podcast);
+        Task AddPodcastAsync(Podcast podcast);
+        Task<Podcast?> GetPodcastByIdAsync(int podcastId);
+        Task UpdatePodcastAsync(Podcast podcast);
+        Task DeletePodcastAsync(Podcast podcast);
 
-        List<Podcast> GetPodcastsByApprovalStatus(bool isApproved);
-        List<Podcast> GetFlaggedPodcasts();
-        List<Podcast> GetPodcastsByUser(int userId);
-        bool HasOtherFlaggedPodcasts(int userId);
+        Task<List<Podcast>> GetPodcastsByApprovalStatusAsync(bool isApproved);
+        Task<List<Podcast>> GetFlaggedPodcastsAsync();
+        Task<List<Podcast>> GetPodcastsByUserAsync(int userId);
+        Task<bool> HasOtherFlaggedPodcastsAsync(int userId);
 
-        List<object> GetMinimalApprovedPodcasts();
+        Task<List<object>> GetMinimalApprovedPodcastsAsync();
     }
 }

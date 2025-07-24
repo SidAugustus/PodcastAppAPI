@@ -5,23 +5,23 @@ namespace PodcastApp.Interface
 {
     public interface IPodcastService
     {
-        bool UploadPodcast(PodcastUploadDTO dto);
+        Task<bool> UploadPodcastAsync(PodcastUploadDTO dto);
 
-        List<Podcast> GetPendingPodcasts();
-        List<Podcast> GetApprovedPodcasts();
-        List<Podcast> GetFlaggedPodcasts();
-        List<Podcast> GetPodcastsByUser(int userId);
+        Task<List<Podcast>> GetPendingPodcastsAsync();
+        Task<List<Podcast>> GetApprovedPodcastsAsync();
+        Task<List<Podcast>> GetFlaggedPodcastsAsync();
+        Task<List<Podcast>> GetPodcastsByUserAsync(int userId);
 
-        List<User> GetFlaggedUsers();
-        List<User> GetSuspendedUsers();
+        Task<List<User>> GetFlaggedUsersAsync();
+        Task<List<User>> GetSuspendedUsersAsync();
 
-        List<object> GetAllApprovedPodcasts();
+        Task<List<object>> GetAllApprovedPodcastsAsync();
 
-        bool ApprovePodcast(int id);
-        bool DeletePodcast(int id);
-        bool FlagPodcastAndUser(int podcastId);
-        bool UnflagPodcastAndUser(int podcastId);
-        bool SuspendUser(int userId);
-        bool UnsuspendUser(int userId);
+        Task<bool> ApprovePodcastAsync(int id);
+        Task<bool> DeletePodcastAsync(int id);
+        Task<bool> FlagPodcastAndUserAsync(int podcastId);
+        Task<bool> UnflagPodcastAndUserAsync(int podcastId);
+        Task<bool> SuspendUserAsync(int userId);
+        Task<bool> UnsuspendUserAsync(int userId);
     }
 }

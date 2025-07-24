@@ -13,36 +13,36 @@ namespace PodcastApp.Repository
             _context = context;
         }
 
-        public void Subscribe(int userId, int podcastId)
+        public async Task SubscribeAsync(int userId, int podcastId)
         {
-            var alreadySubscribed = _context.Subscriptions
-                .Any(s => s.UserId == userId && s.PodcastId == podcastId);
+            var alreadySubscribed = await _context.Subscriptions
+                .AnyAsync(s => s.UserId == userId && s.PodcastId == podcastId);
 
             if (!alreadySubscribed)
             {
-                _context.Subscriptions.Add(new Subscription { UserId = userId, PodcastId = podcastId });
-                _context.SaveChanges();
+                await _context.Subscriptions.AddAsync(new Subscription { UserId = userId, PodcastId = podcastId });
+                await _context.SaveChangesAsync();
             }
         }
 
-        public void Unsubscribe(int userId, int podcastId)
+        public async Task UnsubscribeAsync(int userId, int podcastId)
         {
-            var subscription = _context.Subscriptions
-                .FirstOrDefault(s => s.UserId == userId && s.PodcastId == podcastId);
+            var subscription = await _context.Subscriptions
+                .FirstOrDefaultAsync(s => s.UserId == userId && s.PodcastId == podcastId);
 
             if (subscription != null)
             {
                 _context.Subscriptions.Remove(subscription);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public List<Subscription> GetSubscriptionsByUser(int userId)
+        public async Task<List<Subscription>> GetSubscriptionsByUserAsync(int userId)
         {
-            return _context.Subscriptions
+            return await _context.Subscriptions
                 .Where(s => s.UserId == userId)
                 .Include(s => s.Podcast)  // used to include podcast details
-                .ToList();
+                .ToListAsync();
         }
     }
 

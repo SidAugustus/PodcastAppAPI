@@ -1,13 +1,31 @@
-﻿namespace PodcastApp.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PodcastApp.DTO
 {
-    public class EpisodeDTO
-    {
-        public int PodcastId { get; set; }      
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string AudioUrl { get; set; }
-        public string Duration { get; set; }
-        public DateTime ReleaseDate { get; set; }
-    }
+    public record EpisodeDTO
+    (
+        [Required]
+        int PodcastId,
+
+        [Required]
+        [MaxLength(100)]
+        string? Title,
+
+        [Required]
+        [MaxLength(500)]
+        string? Description,
+
+        [Required]
+        [Url]
+        string? AudioUrl,
+
+        [Required]
+        [RegularExpression(@"^\d{1,2}:\d{2}:\d{2}$", ErrorMessage = "Duration must be in HH:mm:ss format.")]
+        string Duration,
+
+        [Required]
+        [DataType(DataType.Date)]
+        DateTime ReleaseDate
+    );
 }
 

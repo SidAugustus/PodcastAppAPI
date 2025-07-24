@@ -1,8 +1,13 @@
-﻿namespace PodcastApp.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PodcastApp.DTO
 {
-    public class SubscriptionDTO
-    {
-        public int UserId { get; set; }
-        public int PodcastId { get; set; }
-    }
+    public record SubscriptionDTO
+    (
+        [Required]
+        int UserId,
+
+        [Required]
+        int PodcastId
+    );
 }

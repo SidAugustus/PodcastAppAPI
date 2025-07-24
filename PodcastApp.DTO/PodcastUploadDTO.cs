@@ -1,10 +1,22 @@
-﻿namespace PodcastApp.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PodcastApp.DTO
 {
-    public class PodcastUploadDTO
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Category { get; set; }
-        public int CreatedByUserId { get; set; }
-    }
+    public record PodcastUploadDTO
+    (
+        [Required]
+        [MaxLength(100)]
+        string Title,
+
+        [Required]
+        [MaxLength(500)]
+        string Description,
+
+        [Required]
+        [MaxLength(100)]
+        string Category,
+
+        [Required]
+        int CreatedByUserId
+    );
 }
