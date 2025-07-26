@@ -6,18 +6,16 @@ namespace PodcastApp.AppServices
 {
     public class EpisodeService : IEpisodeService
     {
-        private readonly IEpisodeRepository _episodeRepository;
-        private readonly IPodcastRepository _podcastRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EpisodeService(IEpisodeRepository episodeRepository, IPodcastRepository podcastRepository)
+        public EpisodeService(IUnitOfWork unitOfWork)
         {
-            _episodeRepository = episodeRepository;
-            _podcastRepository = podcastRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> AddEpisodeAsync(EpisodeDTO dto)
         {
-            var podcast = await _podcastRepository.GetPodcastByIdAsync(dto.PodcastId);
+            var podcast = await _unitOfWork.Podcasts.GetByIdAsync(dto.PodcastId);
             if (podcast == null) return false;
 
             var episode = new Episode
@@ -30,13 +28,14 @@ namespace PodcastApp.AppServices
                 ReleaseDate = dto.ReleaseDate
             };
 
-            await _episodeRepository.AddEpisodeAsync(episode);
+            await _unitOfWork.Episodes.AddAsync(episode);
+            await _unitOfWork.CompleteAsync();
             return true;
         }
 
         public async Task<bool> UpdateEpisodeAsync(int episodeId, EpisodeDTO dto)
         {
-            var episode = await _episodeRepository.GetEpisodeByIdAsync(episodeId);
+            var episode = await _unitOfWork.Episodes.GetByIdAsync(episodeId);
             if (episode == null) return false;
 
             episode.Title = dto.Title;
@@ -44,22 +43,24 @@ namespace PodcastApp.AppServices
             episode.AudioUrl = dto.AudioUrl;
             episode.Duration = dto.Duration;
 
-            await _episodeRepository.UpdateEpisodeAsync(episode);
+            _unitOfWork.Episodes.Update(episode);
+            await _unitOfWork.CompleteAsync();
             return true;
         }
 
         public async Task<bool> DeleteEpisodeAsync(int episodeId)
         {
-            var episode = await _episodeRepository.GetEpisodeByIdAsync(episodeId);
+            var episode = await _unitOfWork.Episodes.GetByIdAsync(episodeId);
             if (episode == null) return false;
 
-            await _episodeRepository.DeleteEpisodeAsync(episode);
+            _unitOfWork.Episodes.Delete(episode);
+            await _unitOfWork.CompleteAsync();
             return true;
         }
 
         public async Task<List<Episode>> GetEpisodesByPodcastAsync(int podcastId)
         {
-            return await _episodeRepository.GetEpisodesByPodcastAsync(podcastId);
+            return await _unitOfWork.Episodes.GetEpisodesByPodcastAsync(podcastId);
         }
     }
 }

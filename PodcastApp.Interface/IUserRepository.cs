@@ -2,7 +2,7 @@
 
 namespace PodcastApp.Interface
 {
-    public interface IUserRepository
+    public interface IUserRepository : IGenericRepository<User>
     {
         Task AddUserAsync(User user);
         Task<User?> GetUserByEmailAsync(string email);

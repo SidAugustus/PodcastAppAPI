@@ -10,6 +10,6 @@ namespace PodcastApp.Interface
         Task RegisterUserAsync(RegisterRequest request);
         Task<bool> ValidateLoginAsync(LoginRequest request);
         string HashPassword(string Password);
-        Task<User> GetUserIfValidAsync(LoginRequest request);
+        Task<User?> GetUserIfValidAsync(LoginRequest request);
     }
 }

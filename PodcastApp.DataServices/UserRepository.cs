@@ -4,11 +4,11 @@ using PodcastApp.Models;
 
 namespace PodcastApp.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : GenericRepository<User>, IUserRepository
     {
         private readonly AppDbContext _context;
 
-        public UserRepository(AppDbContext context)
+        public UserRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }
@@ -33,6 +33,7 @@ namespace PodcastApp.Repository
         {
             return await _context.Users.ToListAsync();
         }
+
         public async Task<List<User>> GetFlaggedUsersAsync()
         {
             return await _context.Users.Where(u => u.IsFlagged).ToListAsync();
@@ -41,8 +42,8 @@ namespace PodcastApp.Repository
         public async Task<List<User>> GetSuspendedUsersAsync()
         {
             return await _context.Users.Where(u => u.IsSuspended).ToListAsync();
-
         }
+
         public async Task UpdateUserAsync(User user)
         {
             _context.Users.Update(user);

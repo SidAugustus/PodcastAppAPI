@@ -1,25 +1,25 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using PodcastApp.DTO;
 using PodcastApp.Interface;
 using PodcastApp.Models;
-using PodcastApp.DTO;
-//using PodcastApp.API.Mapper;
 
 namespace PodcastApp.AppServices
 {
     public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
+
         }
 
         public async Task<bool> EmailExistsAsync(string email)
         {
-            return await _userRepository.GetUserByEmailAsync(email) != null;
+            return await _unitOfWork.Users.GetUserByEmailAsync(email) != null;
         }
 
         public async Task RegisterUserAsync(RegisterRequest request)
@@ -38,12 +38,13 @@ namespace PodcastApp.AppServices
                 IsSuspended = false
             };
 
-            await _userRepository.AddUserAsync(user);
+            await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task<bool> ValidateLoginAsync(LoginRequest request)
         {
-            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+            var user = await _unitOfWork.Users.GetUserByEmailAsync(request.Email);
             if (user == null) return false;
 
             return VerifyPassword(request.Password, user.PasswordHash);
@@ -51,7 +52,7 @@ namespace PodcastApp.AppServices
 
         public async Task<User?> GetUserIfValidAsync(LoginRequest request)
         {
-            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+            var user = await _unitOfWork.Users.GetUserByEmailAsync(request.Email);
             if (user == null) return null;
 
             return VerifyPassword(request.Password, user.PasswordHash) ? user : null;

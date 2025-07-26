@@ -4,36 +4,13 @@ using PodcastApp.Models;
 
 namespace PodcastApp.Repository
 {
-    public class PodcastRepository : IPodcastRepository
+    public class PodcastRepository : GenericRepository<Podcast>, IPodcastRepository
     {
         private readonly AppDbContext _context;
 
-        public PodcastRepository(AppDbContext context)
+        public PodcastRepository(AppDbContext context) : base(context)
         {
             _context = context;
-        }
-
-        public async Task AddPodcastAsync(Podcast podcast)
-        {
-            await _context.Podcasts.AddAsync(podcast);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<Podcast?> GetPodcastByIdAsync(int podcastId)
-        {
-            return await _context.Podcasts.FirstOrDefaultAsync(p => p.PodcastId == podcastId);
-        }
-
-        public async Task UpdatePodcastAsync(Podcast podcast)
-        {
-            _context.Podcasts.Update(podcast);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeletePodcastAsync(Podcast podcast)
-        {
-            _context.Podcasts.Remove(podcast);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Podcast>> GetPodcastsByApprovalStatusAsync(bool isApproved)

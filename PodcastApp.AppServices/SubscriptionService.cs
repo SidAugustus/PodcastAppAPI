@@ -6,26 +6,28 @@ namespace PodcastApp.AppServices
 {
     public class SubscriptionService : ISubscriptionService
     {
-        private readonly ISubscriptionRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SubscriptionService(ISubscriptionRepository repository)
+        public SubscriptionService(
+            IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;   
         }
 
         public async Task SubscribeAsync(SubscriptionDTO dto)
         {
-            await _repository.SubscribeAsync(dto.UserId, dto.PodcastId);
+            await _unitOfWork.Subscriptions.SubscribeAsync(dto.UserId, dto.PodcastId);
         }
 
         public async Task UnsubscribeAsync(SubscriptionDTO dto)
         {
-            await _repository.UnsubscribeAsync(dto.UserId, dto.PodcastId);
+            await _unitOfWork.Subscriptions.UnsubscribeAsync(dto.UserId, dto.PodcastId);
         }
 
         public async Task<List<Subscription>> GetSubscriptionsByUserAsync(int userId)
         {
-            return await _repository.GetSubscriptionsByUserAsync(userId);
+            return await _unitOfWork.Subscriptions.GetSubscriptionsByUserAsync(userId);
         }
     }
 }
+

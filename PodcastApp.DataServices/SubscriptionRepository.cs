@@ -4,23 +4,27 @@ using PodcastApp.Models;
 
 namespace PodcastApp.Repository
 {
-    public class SubscriptionRepository : ISubscriptionRepository
+    public class SubscriptionRepository : GenericRepository<Subscription>, ISubscriptionRepository
     {
         private readonly AppDbContext _context;
 
-        public SubscriptionRepository(AppDbContext context)
+        public SubscriptionRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }
 
         public async Task SubscribeAsync(int userId, int podcastId)
         {
-            var alreadySubscribed = await _context.Subscriptions
+            bool alreadySubscribed = await _context.Subscriptions
                 .AnyAsync(s => s.UserId == userId && s.PodcastId == podcastId);
 
             if (!alreadySubscribed)
             {
-                await _context.Subscriptions.AddAsync(new Subscription { UserId = userId, PodcastId = podcastId });
+                await _context.Subscriptions.AddAsync(new Subscription
+                {
+                    UserId = userId,
+                    PodcastId = podcastId
+                });
                 await _context.SaveChangesAsync();
             }
         }
@@ -41,9 +45,9 @@ namespace PodcastApp.Repository
         {
             return await _context.Subscriptions
                 .Where(s => s.UserId == userId)
-                .Include(s => s.Podcast)  // used to include podcast details
+                .Include(s => s.Podcast)
                 .ToListAsync();
         }
     }
-
 }
+
