@@ -21,60 +21,39 @@ namespace PodcastApp.API.Controllers
         public async Task<IActionResult> AddEpisodeAsync([FromBody] EpisodeDTO dto)
         {
             _logger.LogInformation($"attempt to add episode {dto.Title} to {dto.PodcastId}");
-            try
-            {
-                await _episodeService.AddEpisodeAsync(dto);
-                return Ok(new { message = " Episode added successfully." });
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+            
+            await _episodeService.AddEpisodeAsync(dto);
+            return Ok(new { message = " Episode added successfully." });
         }
 
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateEpisodeAsync(int id, [FromBody] EpisodeDTO dto)
         {
             _logger.LogInformation($"attempt to update episode {dto.Title}");
-            try
-            {
-                await _episodeService.UpdateEpisodeAsync(id, dto);
-                return Ok(new { message = " Episode updated successfully." });
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+            
+            await _episodeService.UpdateEpisodeAsync(id, dto);
+            return Ok(new { message = " Episode updated successfully." });
+            
+           
         }
 
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteEpisodeAsync(int id)
         {
-            _logger.LogInformation($"attempt to delete episode {id}");    
-            try
-            {
-                await _episodeService.DeleteEpisodeAsync(id);
-                return Ok(new { message = " Episode deleted successfully." });
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+          _logger.LogInformation($"attempt to delete episode {id}");    
+          
+          await _episodeService.DeleteEpisodeAsync(id);
+          return Ok(new { message = " Episode deleted successfully." });
+           
         }
         
         [HttpGet("byPodcast/{podcastId}")]
         public async Task<IActionResult> GetEpisodesByPodcastAsync(int podcastId)
         {
             _logger.LogInformation($"attempt to get epiosdes of podcast: {podcastId}");
-            try
-            {
-                var episodes = await _episodeService.GetEpisodesByPodcastAsync(podcastId);
-                return Ok(episodes);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+            var episodes = await _episodeService.GetEpisodesByPodcastAsync(podcastId);
+            return Ok(episodes);
+           
         }
     }
 }

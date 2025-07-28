@@ -24,23 +24,19 @@ namespace PodcastApp.API.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             _logger.LogInformation("Registeration attempt for User: {FirstName} {LastName}", request.FirstName, request.LastName);  
-            try
-            {
-                if (await _authService.EmailExistsAsync(request.Email))
-                    return BadRequest(new { message = "User already exists." });
+             if (await _authService.EmailExistsAsync(request.Email))
+                return BadRequest(new { message = "User already exists." });
 
-                await _authService.RegisterUserAsync(request);
-                return Ok(new { message = "User registered successfully." });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Server error: " + ex.Message });
-            }
+             await _authService.RegisterUserAsync(request);
+             return Ok(new { message = "User registered successfully." });
+            
+          
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest login)
         {
+            //throw new Exception("Simulated failure in login."); //to check if filter exception handling is working.
             _logger.LogInformation("Login Attempt for: {Email} ", login.Email);
             var user = await _authService.GetUserIfValidAsync(login);
 

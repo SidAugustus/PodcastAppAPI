@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using PodcastApp.API.Filters;
 using PodcastApp.API.Mappings;
+using PodcastApp.API.Middleware;
 using PodcastApp.AppServices;
 using PodcastApp.Interface;
 using PodcastApp.Repository;
@@ -17,6 +19,12 @@ builder.Services.AddControllers()
     .AddJsonOptions(x =>
         x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ApiExceptionFilter>();
+});
+
+builder.Services.AddScoped<ApiExceptionFilter>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddEndpointsApiExplorer();
@@ -45,12 +53,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
-        {
-            policy.WithOrigins("http://localhost:4200") // this is the Angular development server that we use
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        });
+    {
+        policy.WithOrigins("http://localhost:4200") // this is the Angular development server that we use
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
+
+builder.Services.AddScoped<ApiExceptionFilter>();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ApiExceptionFilter>();
+});
+
 
 //serilogger
 builder.Host.UseSerilog();
@@ -66,6 +82,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseMiddleware<PodcastApp.API.Middleware.ResponseWrappingMiddleware>();
 

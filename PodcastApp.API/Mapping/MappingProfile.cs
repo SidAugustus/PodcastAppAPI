@@ -16,6 +16,7 @@ namespace PodcastApp.API.Mappings
             CreateMap<Podcast, PodcastUploadDTO>().ReverseMap();
             CreateMap<Episode, EpisodeDTO>().ReverseMap();
             CreateMap<Subscription, SubscriptionDTO>().ReverseMap();
+
         }
     }
 }

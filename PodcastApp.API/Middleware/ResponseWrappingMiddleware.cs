@@ -14,6 +14,10 @@ namespace PodcastApp.API.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            if (context.Request.Path.ToString().Contains("simulate-middleware-error"))
+            {
+                throw new Exception("Simulated exception from middleware");
+            }
             var originalBodyStream = context.Response.Body;
 
             using var memoryStream = new MemoryStream();

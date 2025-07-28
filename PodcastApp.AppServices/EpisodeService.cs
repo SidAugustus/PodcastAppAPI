@@ -37,11 +37,8 @@ namespace PodcastApp.AppServices
             _logger.LogInformation($"Updating the Episode titled: {dto.Title}");
             var episode = await _unitOfWork.Episodes.GetByIdAsync(episodeId);
             if (episode == null) return false;
-
-            episode.Title = dto.Title;
-            episode.Description = dto.Description;
-            episode.AudioUrl = dto.AudioUrl;
-            episode.Duration = dto.Duration;
+            
+            _mapper.Map(dto, episode);
 
             _unitOfWork.Episodes.Update(episode);
             await _unitOfWork.CompleteAsync();
