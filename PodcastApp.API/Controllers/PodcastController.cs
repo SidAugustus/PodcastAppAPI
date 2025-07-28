@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PodcastApp.API.Controllers;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
 
@@ -7,15 +8,18 @@ using PodcastApp.Interface;
 public class PodcastController : ControllerBase
 {
     private readonly IPodcastService _podcastService;
+    private readonly ILogger<PodcastController> _logger;
 
-    public PodcastController(IPodcastService podcastService)
+    public PodcastController(IPodcastService podcastService, ILogger<PodcastController> logger)
     {
         _podcastService = podcastService;
+        _logger = logger;
     }
 
     [HttpPost("upload")]
     public async Task<IActionResult> UploadPodcastAsync([FromBody] PodcastUploadDTO dto)
     {
+        _logger.LogInformation("Uploading Podcast: {Title} ", dto.Title);
         var result = await _podcastService.UploadPodcastAsync(dto);
         return Ok(result);
     }
@@ -23,6 +27,7 @@ public class PodcastController : ControllerBase
     [HttpGet("pending")]
     public async Task<IActionResult> GetPendingPodcastsAsync()
     {
+        
         var result = await _podcastService.GetPendingPodcastsAsync();
         return Ok(result);
     }
@@ -30,6 +35,7 @@ public class PodcastController : ControllerBase
     [HttpPut("approve/{id}")]
     public async Task<IActionResult> ApprovePodcastAsync(int id)
     {
+        _logger.LogInformation($"Approval attempt for Podcast {id}");
         var success = await _podcastService.ApprovePodcastAsync(id);
         if (!success) return NotFound(new { message = "Podcast not found." });
 
@@ -39,6 +45,7 @@ public class PodcastController : ControllerBase
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeletePodcastAsync(int id)
     {
+        _logger.LogInformation($"delete attempt for: {id}");
         var success = await _podcastService.DeletePodcastAsync(id);
         if (!success) return NotFound(new { message = "Podcast not found." });
 
@@ -62,6 +69,7 @@ public class PodcastController : ControllerBase
     [HttpPut("flag/{id}")]
     public async Task<IActionResult> FlagPodcastAsync(int id)
     {
+        _logger.LogInformation($"attempt to flag podcast: {id}");
         var success = await _podcastService.FlagPodcastAndUserAsync(id);
         if (!success) return NotFound(new { message = "Podcast not found." });
 
@@ -71,6 +79,7 @@ public class PodcastController : ControllerBase
     [HttpPut("unflag/{id}")]
     public async Task<IActionResult> UnflagPodcastAndUserAsync(int id)
     {
+        _logger.LogInformation($"attempt to unflag podcast: {id}");
         var success = await _podcastService.UnflagPodcastAndUserAsync(id);
         if (!success) return NotFound(new { message = "Podcast not found." });
 
@@ -87,6 +96,7 @@ public class PodcastController : ControllerBase
     [HttpPut("user/suspend/{id}")]
     public async Task<IActionResult> SuspendUserAsync(int id)
     {
+        _logger.LogInformation($"attempt to suspend user {id}");   
         var success = await _podcastService.SuspendUserAsync(id);
         if (!success) return NotFound(new { message = "User not found." });
 
@@ -96,6 +106,7 @@ public class PodcastController : ControllerBase
     [HttpPut("user/unsuspend/{id}")]
     public async Task<IActionResult> UnsuspendUserAsync(int id)
     {
+        _logger.LogInformation($"attempt to unsuspend user {id}");
         var success = await _podcastService.UnsuspendUserAsync(id);
         if (!success) return NotFound(new { message = "User not found." });
 

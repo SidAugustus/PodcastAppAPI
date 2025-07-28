@@ -11,15 +11,19 @@ namespace PodcastApp.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService authService)
+       
+        public AuthController(IAuthService authService, ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
+            _logger.LogInformation("Registeration attempt for User: {FirstName} {LastName}", request.FirstName, request.LastName);  
             try
             {
                 if (await _authService.EmailExistsAsync(request.Email))
@@ -37,6 +41,7 @@ namespace PodcastApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest login)
         {
+            _logger.LogInformation("Login Attempt for: {Email} ", login.Email);
             var user = await _authService.GetUserIfValidAsync(login);
 
             if (user == null)

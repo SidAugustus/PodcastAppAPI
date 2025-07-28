@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PodcastApp.Repository;
-using PodcastApp.Interface;
-using PodcastApp.AppServices;
 using PodcastApp.API.Mappings;
+using PodcastApp.AppServices;
+using PodcastApp.Interface;
+using PodcastApp.Repository;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
 
 // This will add the services we use into the container
 
@@ -48,6 +52,8 @@ builder.Services.AddCors(options =>
         });
 });
 
+//serilogger
+builder.Host.UseSerilog();
 
 
 var app = builder.Build();
@@ -60,6 +66,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<PodcastApp.API.Middleware.ResponseWrappingMiddleware>();
+
+app.UseSerilogRequestLogging();  //Logs HTTP requests automatically
 
 app.UseHttpsRedirection();
 

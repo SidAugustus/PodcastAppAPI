@@ -9,15 +9,18 @@ namespace PodcastApp.API.Controllers
     public class EpisodeController : ControllerBase
     {
         private readonly IEpisodeService _episodeService;
+        private readonly ILogger<EpisodeController> _logger;
 
-        public EpisodeController(IEpisodeService episodeService)
+        public EpisodeController(IEpisodeService episodeService, ILogger<EpisodeController> logger)
         {
             _episodeService = episodeService;
+            _logger = logger;
         }
 
         [HttpPost("add")]
         public async Task<IActionResult> AddEpisodeAsync([FromBody] EpisodeDTO dto)
         {
+            _logger.LogInformation($"attempt to add episode {dto.Title} to {dto.PodcastId}");
             try
             {
                 await _episodeService.AddEpisodeAsync(dto);
@@ -32,6 +35,7 @@ namespace PodcastApp.API.Controllers
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateEpisodeAsync(int id, [FromBody] EpisodeDTO dto)
         {
+            _logger.LogInformation($"attempt to update episode {dto.Title}");
             try
             {
                 await _episodeService.UpdateEpisodeAsync(id, dto);
@@ -46,6 +50,7 @@ namespace PodcastApp.API.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteEpisodeAsync(int id)
         {
+            _logger.LogInformation($"attempt to delete episode {id}");    
             try
             {
                 await _episodeService.DeleteEpisodeAsync(id);
@@ -60,6 +65,7 @@ namespace PodcastApp.API.Controllers
         [HttpGet("byPodcast/{podcastId}")]
         public async Task<IActionResult> GetEpisodesByPodcastAsync(int podcastId)
         {
+            _logger.LogInformation($"attempt to get epiosdes of podcast: {podcastId}");
             try
             {
                 var episodes = await _episodeService.GetEpisodesByPodcastAsync(podcastId);

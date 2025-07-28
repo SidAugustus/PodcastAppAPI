@@ -1,29 +1,29 @@
-﻿using PodcastApp.DTO;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
+using PodcastApp.DTO;
 using PodcastApp.Interface;
 using PodcastApp.Models;
+using Serilog.Core;
 
 namespace PodcastApp.AppServices
 {
     public class PodcastService : IPodcastService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly ILogger<PodcastService> _logger;
 
-        public PodcastService(IUnitOfWork unitOfWork)
+        public PodcastService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<PodcastService> logger)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;   
+            _logger = logger;
         }
 
         public async Task<bool> UploadPodcastAsync(PodcastUploadDTO dto)
         {
-            var podcast = new Podcast
-            {
-                Title = dto.Title,
-                Description = dto.Description,
-                Category = dto.Category,
-                CreatedByUserId = dto.CreatedByUserId,
-                CreatedAt = DateTime.Now,
-                IsApproved = false
-            };
+            _logger.LogInformation($"Uploading Podcast: {dto.Title}");
+            var podcast = _mapper.Map<Podcast>(dto);
 
             await _unitOfWork.Podcasts.AddAsync(podcast);
             await _unitOfWork.CompleteAsync();
@@ -37,6 +37,7 @@ namespace PodcastApp.AppServices
 
         public async Task<bool> ApprovePodcastAsync(int id)
         {
+            _logger.LogInformation($"Approving Podcast: {id}");
             var podcast = await _unitOfWork.Podcasts.GetByIdAsync(id);
             if (podcast == null) return false;
 
@@ -48,6 +49,7 @@ namespace PodcastApp.AppServices
 
         public async Task<bool> DeletePodcastAsync(int id)
         {
+            _logger.LogInformation($"Deleting Podcast: {id}");
             var podcast = await _unitOfWork.Podcasts.GetByIdAsync(id);
             if (podcast == null) return false;
 
@@ -58,6 +60,7 @@ namespace PodcastApp.AppServices
 
         public async Task<bool> FlagPodcastAndUserAsync(int podcastId)
         {
+            
             var podcast = await _unitOfWork.Podcasts.GetByIdAsync(podcastId);
             if (podcast == null) return false;
 
@@ -65,6 +68,7 @@ namespace PodcastApp.AppServices
             _unitOfWork.Podcasts.Update(podcast);
             await _unitOfWork.CompleteAsync();
 
+            _logger.LogInformation($"Flagging Podcast: {podcastId} and User: {podcast.CreatedByUser}");
             var user = await _unitOfWork.Users.GetByIdAsync(podcast.CreatedByUserId);
             if (user != null)
             {
@@ -85,6 +89,7 @@ namespace PodcastApp.AppServices
             _unitOfWork.Podcasts.Update(podcast);
             await _unitOfWork.CompleteAsync();
 
+            _logger.LogInformation($"Unflagging Podcast: {podcastId} and User: {podcast.CreatedByUser}");
             var user = await _unitOfWork.Users.GetByIdAsync(podcast.CreatedByUserId);
             if (user != null)
             {
@@ -117,6 +122,7 @@ namespace PodcastApp.AppServices
 
         public async Task<List<Podcast>> GetPodcastsByUserAsync(int userId)
         {
+            _logger.LogInformation($"Getting Podcasts by {userId}");
             return await _unitOfWork.Podcasts.GetPodcastsByUserAsync(userId);
         }
 
@@ -132,6 +138,7 @@ namespace PodcastApp.AppServices
 
         public async Task<bool> SuspendUserAsync(int userId)
         {
+            _logger.LogInformation($"Suspending user {userId}");
             var user = await _unitOfWork.Users.GetByIdAsync(userId);
             if (user == null) return false;
 
