@@ -11,5 +11,13 @@ namespace PodcastApp.Interface
         Task<bool> ValidateLoginAsync(LoginRequest request);
         string HashPassword(string Password);
         Task<User?> GetUserIfValidAsync(LoginRequest request);
+
+        AuthResponseDTO GenerateTokens(User user);
+
+
     }
+
 }
+
+
+

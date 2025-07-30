@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PodcastApp.API.Controllers;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
@@ -32,6 +33,7 @@ public class PodcastController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("approve/{id}")]
     public async Task<IActionResult> ApprovePodcastAsync(int id)
     {
@@ -42,6 +44,7 @@ public class PodcastController : ControllerBase
         return Ok(new { message = "Podcast approved." });
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeletePodcastAsync(int id)
     {
@@ -66,6 +69,7 @@ public class PodcastController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("flag/{id}")]
     public async Task<IActionResult> FlagPodcastAsync(int id)
     {
@@ -76,6 +80,7 @@ public class PodcastController : ControllerBase
         return Ok(new { message = "Podcast and user flagged." });
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("unflag/{id}")]
     public async Task<IActionResult> UnflagPodcastAndUserAsync(int id)
     {
@@ -93,6 +98,7 @@ public class PodcastController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("user/suspend/{id}")]
     public async Task<IActionResult> SuspendUserAsync(int id)
     {
@@ -103,6 +109,7 @@ public class PodcastController : ControllerBase
         return Ok(new { message = "User suspended." });
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("user/unsuspend/{id}")]
     public async Task<IActionResult> UnsuspendUserAsync(int id)
     {
@@ -135,7 +142,7 @@ public class PodcastController : ControllerBase
     }
 
     [HttpGet("approved/paginated")]
-    public async Task<IActionResult> GetPaginatedApprovedPodcastsAsync(int page = 1, int pageSize = 5)
+    public async Task<IActionResult> GetPaginatedApprovedPodcastsAsync(int page = 1, int pageSize = 2)
     {
         var query = await _podcastService.GetApprovedPodcastsAsync(); // Full list
 

@@ -12,5 +12,7 @@ namespace PodcastApp.Repository
         public DbSet<Podcast> Podcasts { get; set; }
         public DbSet<Episode> Episodes { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+
+
     }
 }

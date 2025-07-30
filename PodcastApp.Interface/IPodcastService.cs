@@ -23,5 +23,7 @@ namespace PodcastApp.Interface
         Task<bool> UnflagPodcastAndUserAsync(int podcastId);
         Task<bool> SuspendUserAsync(int userId);
         Task<bool> UnsuspendUserAsync(int userId);
+
+        //Task<PaginatedList<PodcastDTO>> GetPaginatedApprovedAsync(PaginationParams paginationParams);
     }
 }

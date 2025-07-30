@@ -1,10 +1,10 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
 using PodcastApp.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace PodcastApp.AppServices
 {
@@ -13,12 +13,14 @@ namespace PodcastApp.AppServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;   
         private readonly ILogger<AuthService> _logger;
+        private readonly ITokenService _tokenService;
 
-        public AuthService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<AuthService> logger)
+        public AuthService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<AuthService> logger, ITokenService tokenService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _tokenService = tokenService;
         }
 
         public async Task<bool> EmailExistsAsync(string email)
@@ -65,6 +67,18 @@ namespace PodcastApp.AppServices
             var hash = HashPassword(plainText);
             return hash == hashed;
         }
+
+        public AuthResponseDTO GenerateTokens(User user)
+        {
+            return new AuthResponseDTO
+            {
+                AccessToken = _tokenService.CreateToken(user),
+                RefreshToken = _tokenService.CreateRefreshToken(user),
+                UserId = user.UserId,
+                Role = user.RoleId
+            };
+        }
+
     }
 }
 

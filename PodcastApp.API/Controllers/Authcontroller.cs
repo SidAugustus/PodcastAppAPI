@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PodcastApp.AppServices;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
 
@@ -12,12 +13,14 @@ namespace PodcastApp.API.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ILogger<AuthController> _logger;
+        private readonly ITokenService _tokenService;
 
        
-        public AuthController(IAuthService authService, ILogger<AuthController> logger)
+        public AuthController(IAuthService authService, ILogger<AuthController> logger, ITokenService tokenService)
         {
             _authService = authService;
             _logger = logger;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
@@ -46,12 +49,9 @@ namespace PodcastApp.API.Controllers
             if (user.IsSuspended)
                 return Unauthorized(new { message = "Your account has been suspended. Please contact support." });
 
-            return Ok(new
-            {
-                userId = user.UserId,
-                role = user.Role,
-                isSuspended = user.IsSuspended
-            });
+            var tokenResponse = _authService.GenerateTokens(user);
+
+            return Ok(tokenResponse);
         }
     }
 }
