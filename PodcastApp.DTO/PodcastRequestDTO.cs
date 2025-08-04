@@ -1,23 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using PodcastApp.DTO.Attributes;
 
 namespace PodcastApp.DTO
 {
-    public record PodcastRequest
+    public record PodcastRequestDTO
     (
-        [Required]
+        [SmartRequired]
         [MaxLength(100)]
         string Title,
 
-        [Required]
+        [SmartRequired]
         [MaxLength(500)]
         string Description,
 
-        [Required]
+        [SmartRequired]
         [MaxLength(100)]
         string Category,
 
-        [Required]
+        [SmartRequired]
         int CreatedByUserId
 
     );

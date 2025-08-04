@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
 
 namespace PodcastApp.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [Authorize]
+    [ApiVersion("1.0")]  // This marks this controller for v1.0
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class EpisodeController : ControllerBase
     {
         private readonly IEpisodeService _episodeService;
@@ -55,5 +57,21 @@ namespace PodcastApp.API.Controllers
             return Ok(episodes);
            
         }
+
+        [HttpGet("podcast/{podcastId}/approved/paginated")]
+        public async Task<IActionResult> GetPaginatedApprovedEpisodes(int podcastId, int page = 1, int pageSize = 5)
+        {
+            var (episodes, totalCount) = await _episodeService.GetPaginatedApprovedEpisodesAsync(podcastId, page, pageSize);
+
+            return Ok(new
+            {
+                totalCount,
+                page,
+                pageSize,
+                totalPages = (int)Math.Ceiling((double)totalCount! / pageSize),
+                data = episodes
+            });
+        }
+
     }
 }

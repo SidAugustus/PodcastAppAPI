@@ -1,31 +1,33 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PodcastApp.DTO.Attributes;
 
 namespace PodcastApp.DTO
 {
     public record EpisodeDTO
     (
-        [Required]
+        [SmartRequired]
         int PodcastId,
 
-        [Required]
+        [SmartRequired]
         [MaxLength(100)]
         string? Title,
 
-        [Required]
+        [SmartRequired]
         [MaxLength(500)]
         string? Description,
 
-        [Required]
+        [SmartRequired]
         [Url]
         string? AudioUrl,
 
-        [Required]
+        [SmartRequired]
         [RegularExpression(@"^\d{1,2}:\d{2}:\d{2}$", ErrorMessage = "Duration must be in HH:mm:ss format.")]
         string Duration,
 
-        [Required]
+        [SmartRequired]
         [DataType(DataType.Date)]
         DateTime ReleaseDate
     );
 }
+
 

@@ -7,6 +7,6 @@ namespace PodcastApp.Interface
     {
         Task SubscribeAsync(SubscriptionDTO dto);
         Task UnsubscribeAsync(SubscriptionDTO dto);
-        Task<List<Subscription>> GetSubscriptionsByUserAsync(int userId);
+        Task<List<Subscription>?> GetSubscriptionsByUserAsync(int userId);
     }
 }

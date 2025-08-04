@@ -4,11 +4,14 @@ namespace PodcastApp.Interface
 {
     public interface IPodcastRepository : IGenericRepository<Podcast>
     {
-        Task<List<Podcast>> GetPodcastsByApprovalStatusAsync(bool isApproved);
-        Task<List<Podcast>> GetFlaggedPodcastsAsync();
-        Task<List<Podcast>> GetPodcastsByUserAsync(int userId);
+        Task<List<Podcast>?> GetPodcastsByApprovalStatusAsync(bool isApproved);
+        Task<List<Podcast>?> GetFlaggedPodcastsAsync();
+        Task<List<Podcast>?> GetPodcastsByUserAsync(int userId);
         Task<bool> HasOtherFlaggedPodcastsAsync(int userId);
-        Task<List<object>> GetMinimalApprovedPodcastsAsync();
+        Task<List<object>?> GetMinimalApprovedPodcastsAsync();
+
+        Task<(List<Podcast>? Podcasts, int? TotalCount)> GetApprovedPodcastsPaginatedAsync(int page, int pageSize);
+
     }
 }
 

@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PodcastApp.DTO.Attributes;
 
 namespace PodcastApp.DTO
 {
     public record SubscriptionDTO
     (
-        [Required]
+        [SmartRequired]
         int UserId,
 
-        [Required]
+        [SmartRequired]
         int PodcastId
     );
 }

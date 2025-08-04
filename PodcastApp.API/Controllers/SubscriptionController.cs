@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
 
 namespace PodcastApp.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [Authorize]
+    [ApiVersion("1.0")]  // This marks this controller for v1.0
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class SubscriptionController : ControllerBase
     {
         private readonly ISubscriptionService _subscriptionService;

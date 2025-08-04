@@ -28,7 +28,7 @@ namespace PodcastApp.AppServices
             return await _unitOfWork.Users.GetUserByEmailAsync(email) != null;
         }
 
-        public async Task RegisterUserAsync(RegisterRequest request)
+        public async Task RegisterUserAsync(RegisterRequestDTO request)
         {
             _logger.LogInformation($"Registering user: {request.FirstName} {request.LastName}");
             var user = _mapper.Map<User>(request);
@@ -37,7 +37,7 @@ namespace PodcastApp.AppServices
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<bool> ValidateLoginAsync(LoginRequest request)
+        public async Task<bool> ValidateLoginAsync(LoginRequestDTO request)
         {
             _logger.LogInformation($"Validating Login of {request.Email}"); 
             var user = await _unitOfWork.Users.GetUserByEmailAsync(request.Email);
@@ -46,7 +46,7 @@ namespace PodcastApp.AppServices
             return VerifyPassword(request.Password, user.PasswordHash);
         }
 
-        public async Task<User?> GetUserIfValidAsync(LoginRequest request)
+        public async Task<User?> GetUserIfValidAsync(LoginRequestDTO request)
         {
             _logger.LogInformation($"Checking if User {request.Email} is a registered user.");
             var user = await _unitOfWork.Users.GetUserByEmailAsync(request.Email);
@@ -70,13 +70,12 @@ namespace PodcastApp.AppServices
 
         public AuthResponseDTO GenerateTokens(User user)
         {
-            return new AuthResponseDTO
-            {
-                AccessToken = _tokenService.CreateToken(user),
-                RefreshToken = _tokenService.CreateRefreshToken(user),
-                UserId = user.UserId,
-                Role = user.RoleId
-            };
+            return new AuthResponseDTO(
+                _tokenService.CreateToken(user),
+                _tokenService.CreateRefreshToken(user),
+                user.UserId,
+                user.RoleId
+            );
         }
 
     }

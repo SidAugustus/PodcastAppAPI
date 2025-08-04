@@ -29,17 +29,17 @@ namespace PodcastApp.Repository
             return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>?> GetAllUsersAsync()
         {
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<List<User>> GetFlaggedUsersAsync()
+        public async Task<List<User>?> GetFlaggedUsersAsync()
         {
             return await _context.Users.Where(u => u.IsFlagged).ToListAsync();
         }
 
-        public async Task<List<User>> GetSuspendedUsersAsync()
+        public async Task<List<User>?> GetSuspendedUsersAsync()
         {
             return await _context.Users.Where(u => u.IsSuspended).ToListAsync();
         }

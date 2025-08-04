@@ -8,7 +8,10 @@ namespace PodcastApp.Interface
         Task<bool> AddEpisodeAsync(EpisodeDTO dto);
         Task<bool> UpdateEpisodeAsync(int episodeId, EpisodeDTO dto);
         Task<bool> DeleteEpisodeAsync(int episodeId);
-        Task<List<Episode>> GetEpisodesByPodcastAsync(int podcastId);
+        Task<List<Episode>?> GetEpisodesByPodcastAsync(int podcastId);
+
+        Task<(List<Episode>? Episodes, int? TotalCount)> GetPaginatedApprovedEpisodesAsync(int podcastId, int page, int pageSize);
+
     }
 }
 

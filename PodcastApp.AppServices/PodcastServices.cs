@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
@@ -7,6 +8,7 @@ using Serilog.Core;
 
 namespace PodcastApp.AppServices
 {
+    [Authorize]
     public class PodcastService : IPodcastService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -30,7 +32,7 @@ namespace PodcastApp.AppServices
             return true;
         }
 
-        public async Task<List<Podcast>> GetPendingPodcastsAsync()
+        public async Task<List<Podcast>?> GetPendingPodcastsAsync()
         {
             return await _unitOfWork.Podcasts.GetPodcastsByApprovalStatusAsync(false);
         }
@@ -105,33 +107,33 @@ namespace PodcastApp.AppServices
             return true;
         }
 
-        public async Task<List<Podcast>> GetFlaggedPodcastsAsync()
+        public async Task<List<Podcast>?> GetFlaggedPodcastsAsync()
         {
             return await _unitOfWork.Podcasts.GetFlaggedPodcastsAsync();
         }
 
-        public async Task<List<Podcast>> GetApprovedPodcastsAsync()
+        public async Task<List<Podcast>?> GetApprovedPodcastsAsync()
         {
             return await _unitOfWork.Podcasts.GetPodcastsByApprovalStatusAsync(true);
         }
 
-        public async Task<List<object>> GetAllApprovedPodcastsAsync()
+        public async Task<List<object>?> GetAllApprovedPodcastsAsync()
         {
             return await _unitOfWork.Podcasts.GetMinimalApprovedPodcastsAsync();
         }
 
-        public async Task<List<Podcast>> GetPodcastsByUserAsync(int userId)
+        public async Task<List<Podcast>?> GetPodcastsByUserAsync(int userId)
         {
             _logger.LogInformation($"Getting Podcasts by {userId}");
             return await _unitOfWork.Podcasts.GetPodcastsByUserAsync(userId);
         }
 
-        public async Task<List<User>> GetFlaggedUsersAsync()
+        public async Task<List<User>?> GetFlaggedUsersAsync()
         {
             return await _unitOfWork.Users.GetFlaggedUsersAsync();
         }
 
-        public async Task<List<User>> GetSuspendedUsersAsync()
+        public async Task<List<User>?> GetSuspendedUsersAsync()
         {
             return await _unitOfWork.Users.GetSuspendedUsersAsync();
         }
@@ -158,6 +160,12 @@ namespace PodcastApp.AppServices
             await _unitOfWork.CompleteAsync();
             return true;
         }
+
+        public async Task<(List<Podcast>? Podcasts, int? TotalCount)> GetApprovedPodcastsPaginatedAsync(int page, int pageSize)
+        {
+            return await _unitOfWork.Podcasts.GetApprovedPodcastsPaginatedAsync(page, pageSize);
+        }
+
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using PodcastApp.DTO;
 using PodcastApp.Interface;
@@ -56,10 +57,21 @@ namespace PodcastApp.AppServices
             return true;
         }
 
-        public async Task<List<Episode>> GetEpisodesByPodcastAsync(int podcastId)
+        public async Task<List<Episode>?> GetEpisodesByPodcastAsync(int podcastId)
         {
             _logger.LogInformation($"Getting Episodes of the Podcast: {podcastId}");
             return await _unitOfWork.Episodes.GetEpisodesByPodcastAsync(podcastId);
         }
+
+        public async Task<(List<Episode>? Episodes, int? TotalCount)> GetPaginatedApprovedEpisodesAsync(int podcastId, int page, int pageSize)
+        {
+            int skip = (page - 1) * pageSize;
+
+            var episodes = await _unitOfWork.Episodes.GetApprovedEpisodesByPodcastPaginatedAsync(podcastId, skip, pageSize);
+            var totalCount = await _unitOfWork.Episodes.GetApprovedEpisodeCountAsync(podcastId);
+
+            return (episodes, totalCount);
+        }
+
     }
 }

@@ -8,8 +8,8 @@ using System.Security.Claims;
 
 namespace PodcastApp.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]  // This marks this controller for v1.0
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class TokenController : ControllerBase
     {
         private readonly ITokenService _tokenService;
@@ -20,9 +20,9 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpPost("refresh")]
-        public IActionResult Refresh([FromBody] RefreshTokenRequest request)
+        public IActionResult Refresh([FromBody] RefreshTokenRequestDTO request)
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(request.RefreshToken);
+            var principal = _tokenService.GetPrincipalFromExpiredToken(request.RefreshToken!);
             if (principal == null)
             {
                 return Unauthorized(new { message = "Invalid refresh token" });

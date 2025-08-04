@@ -8,7 +8,7 @@ namespace PodcastApp.API.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<User, RegisterRequest>().ReverseMap()
+            CreateMap<User, RegisterRequestDTO>().ReverseMap()
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
                 .ForMember(dest => dest.IsFlagged, opt => opt.MapFrom(src => false))
                 .ForMember(dest => dest.IsSuspended, opt => opt.MapFrom(src => false));

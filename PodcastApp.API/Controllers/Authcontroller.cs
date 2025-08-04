@@ -7,8 +7,8 @@ using PodcastApp.Interface;
 
 namespace PodcastApp.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]  // This marks this controller for v1.0
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -24,7 +24,7 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO request)
         {
             _logger.LogInformation("Registeration attempt for User: {FirstName} {LastName}", request.FirstName, request.LastName);  
              if (await _authService.EmailExistsAsync(request.Email))
@@ -37,7 +37,7 @@ namespace PodcastApp.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest login)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO login)
         {
             //throw new Exception("Simulated failure in login."); //to check if filter exception handling is working.
             _logger.LogInformation("Login Attempt for: {Email} ", login.Email);

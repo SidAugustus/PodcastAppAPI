@@ -41,7 +41,7 @@ namespace PodcastApp.Repository
             }
         }
 
-        public async Task<List<Subscription>> GetSubscriptionsByUserAsync(int userId)
+        public async Task<List<Subscription>?> GetSubscriptionsByUserAsync(int userId)
         {
             return await _context.Subscriptions
                 .Where(s => s.UserId == userId)

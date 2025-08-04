@@ -13,21 +13,21 @@ namespace PodcastApp.Repository
             _context = context;
         }
 
-        public async Task<List<Podcast>> GetPodcastsByApprovalStatusAsync(bool isApproved)
+        public async Task<List<Podcast>?> GetPodcastsByApprovalStatusAsync(bool isApproved)
         {
             return await _context.Podcasts
                 .Where(p => p.IsApproved == isApproved)
                 .ToListAsync();
         }
 
-        public async Task<List<Podcast>> GetFlaggedPodcastsAsync()
+        public async Task<List<Podcast>?> GetFlaggedPodcastsAsync()
         {
             return await _context.Podcasts
                 .Where(p => p.IsFlagged)
                 .ToListAsync();
         }
 
-        public async Task<List<Podcast>> GetPodcastsByUserAsync(int userId)
+        public async Task<List<Podcast>?> GetPodcastsByUserAsync(int userId)
         {
             return await _context.Podcasts
                 .Where(p => p.CreatedByUserId == userId)
@@ -40,7 +40,7 @@ namespace PodcastApp.Repository
                 .AnyAsync(p => p.CreatedByUserId == userId && p.IsFlagged);
         }
 
-        public async Task<List<object>> GetMinimalApprovedPodcastsAsync()
+        public async Task<List<object>?> GetMinimalApprovedPodcastsAsync()
         {
             return await _context.Podcasts
                 .Where(p => p.IsApproved)
@@ -54,5 +54,22 @@ namespace PodcastApp.Repository
                 .Cast<object>()
                 .ToListAsync();
         }
+
+        public async Task<(List<Podcast>? Podcasts, int? TotalCount)> GetApprovedPodcastsPaginatedAsync(int page, int pageSize)
+        {
+            var query = _context.Podcasts
+                .Where(p => p.IsApproved)
+                .OrderByDescending(p => p.CreatedAt); // Optional: Order by latest
+
+            var totalCount = await query.CountAsync();
+
+            var paginated = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (paginated, totalCount);
+        }
+
     }
 }

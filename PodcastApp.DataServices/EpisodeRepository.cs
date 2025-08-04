@@ -13,7 +13,7 @@ namespace PodcastApp.Repository
             _context = context;
         }
 
-        public async Task<List<Episode>> GetEpisodesByPodcastAsync(int podcastId)
+        public async Task<List<Episode>?> GetEpisodesByPodcastAsync(int podcastId)
         {
             return await _context.Episodes
                 .Where(e => e.PodcastId == podcastId)
@@ -25,5 +25,22 @@ namespace PodcastApp.Repository
         {
             return await _context.Episodes.FirstOrDefaultAsync(e => e.EpisodeId == episodeId);
         }
+
+        public async Task<List<Episode>?> GetApprovedEpisodesByPodcastPaginatedAsync(int podcastId, int skip, int take)
+        {
+            return await _context.Episodes
+                .Where(e => e.PodcastId == podcastId)
+                .OrderBy(e => e.ReleaseDate)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetApprovedEpisodeCountAsync(int podcastId)
+        {
+            return await _context.Episodes
+                .CountAsync(e => e.PodcastId == podcastId);
+        }
+
     }
 }

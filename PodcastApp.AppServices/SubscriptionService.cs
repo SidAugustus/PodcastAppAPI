@@ -2,9 +2,11 @@
 using PodcastApp.Interface;
 using PodcastApp.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PodcastApp.AppServices
 {
+    [Authorize]
     public class SubscriptionService : ISubscriptionService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -29,7 +31,7 @@ namespace PodcastApp.AppServices
             await _unitOfWork.Subscriptions.UnsubscribeAsync(dto.UserId, dto.PodcastId);
         }
 
-        public async Task<List<Subscription>> GetSubscriptionsByUserAsync(int userId)
+        public async Task<List<Subscription>?> GetSubscriptionsByUserAsync(int userId)
         {
             _logger.LogInformation($"getting list of subscriptions of User: {userId}");
             return await _unitOfWork.Subscriptions.GetSubscriptionsByUserAsync(userId);

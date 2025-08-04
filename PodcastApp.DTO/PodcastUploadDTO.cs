@@ -1,22 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PodcastApp.DTO.Attributes;
 
 namespace PodcastApp.DTO
 {
     public record PodcastUploadDTO
     (
-        [Required]
+        [SmartRequired]
         [MaxLength(100)]
         string Title,
 
-        [Required]
+        [SmartRequired]
         [MaxLength(500)]
         string Description,
 
-        [Required]
+        [SmartRequired]
         [MaxLength(100)]
         string Category,
 
-        [Required]
+        [SmartRequired]
         int CreatedByUserId
     );
 }

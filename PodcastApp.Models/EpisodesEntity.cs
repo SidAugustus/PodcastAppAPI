@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using PodcastApp.DTO.Attributes;
 
 namespace PodcastApp.Models
 {
@@ -9,28 +10,28 @@ namespace PodcastApp.Models
         [Key]
         public int EpisodeId { get; set; }
 
-        [Required]
+        [SmartRequired]
         [MaxLength(100)]
         public int PodcastId { get; set; }
         [ForeignKey("PodcastId")]
         public Podcast? Podcast { get; set; }
 
-        [Required]
+        [SmartRequired]
         [MaxLength(100)]    
         public string? Title { get; set; }
 
-        [Required]
+        [SmartRequired]
         [MaxLength(500)]
         public string? Description { get; set; }
 
-        [Required]
+        [SmartRequired]
         [Url]
         public string? AudioUrl { get; set; }
 
-        [Required]
+        [SmartRequired]
         public string? Duration { get; set; }
 
-        [Required]
+        [SmartRequired]
         public DateTime ReleaseDate { get; set; } = DateTime.UtcNow;
 
 
